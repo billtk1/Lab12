@@ -1,6 +1,9 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Encrypter {
@@ -26,6 +29,7 @@ public class Encrypter {
     }
 
     /**
+     * Cited Source: https://www.youtube.com/watch?v=8wlE6DgOWBs
      * Encrypts the content of a file and writes the result to another file.
      *
      * @param inputFilePath      the path to the file containing the text to be encrypted
@@ -34,6 +38,14 @@ public class Encrypter {
      */
     public void encrypt(String inputFilePath, String encryptedFilePath) throws Exception {
         //TODO: Call the read method, encrypt the file contents, and then write to new file
+    	 String eOrigin = readFile(inputFilePath);
+    	 char[] eCharacters = eOrigin.toCharArray();//Places read file into character array
+    	 for(char c: eCharacters) {// loops through each character and shifts up to encrypt.
+    		 c += shift;
+    		 System.out.println(c);
+    		 String str = String.valueOf(c);
+    		 writeFile(str, encryptedFilePath);
+    	 }
     }
 
     /**
@@ -45,6 +57,14 @@ public class Encrypter {
      */
     public void decrypt(String messageFilePath, String decryptedFilePath) throws Exception {
         //TODO: Call the read method, decrypt the file contents, and then write to new file
+    	String dOrigin = readFile(messageFilePath);
+   	 	char[] dCharacters = dOrigin.toCharArray();//Places read file into character array
+   	 	for(char c: dCharacters) {// loops through each character and shifts down to decrypt.
+   	 		c -= shift;
+   	 		System.out.print(c);
+   	 		String str = String.valueOf(c);
+   	 		writeFile(str, decryptedFilePath);
+   	 	}
     }
 
     /**
@@ -57,6 +77,12 @@ public class Encrypter {
     private static String readFile(String filePath) throws Exception {
         String message = "";
         //TODO: Read file from filePath
+        Scanner fileScanner = new Scanner(Paths.get(filePath));
+        	while(fileScanner.hasNextLine()) {
+        		message = fileScanner.nextLine();
+        		System.out.println(message);
+        	}
+        	fileScanner.close();
         return message;
     }
 
@@ -65,9 +91,13 @@ public class Encrypter {
      *
      * @param data     the data to be written to the file
      * @param filePath the path to the file where the data will be written
+     * @throws FileNotFoundException 
      */
-    private static void writeFile(String data, String filePath) {
+    private static void writeFile(String data, String filePath) throws FileNotFoundException {
         //TODO: Write to filePath
+    	PrintWriter output = new PrintWriter(filePath);
+    		output.println(data);
+    		output.close();
     }
 
     /**
